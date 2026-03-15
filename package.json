@@ -12,6 +12,7 @@
     "tauri": "tauri",
     "build:sidecar": "cd backend && build.bat",
     "build:all": "scripts\\build-all.bat",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest"
   },
