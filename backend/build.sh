@@ -25,6 +25,13 @@ if [ -z "$TARGET_TRIPLE" ]; then
 fi
 echo "Building for target: $TARGET_TRIPLE"
 
+# Ensure fastembed model is downloaded before bundling
+MODELS_DIR="$SCRIPT_DIR/../models/models--qdrant--all-MiniLM-L6-v2-onnx"
+if [ ! -d "$MODELS_DIR" ]; then
+    echo "Downloading fastembed model..."
+    python3 "$SCRIPT_DIR/scripts/download-models.py"
+fi
+
 pyinstaller api-server.spec --distpath "$OUTPUT_DIR" --clean
 
 # Kill any running sidecar so the file is not locked during rename

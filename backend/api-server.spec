@@ -62,10 +62,10 @@ datas = [
     *collect_data_files('tokenizers'),
     *collect_data_files('fastapi'),
     *collect_data_files('starlette'),
-    # Pre-downloaded fastembed model — fastembed looks for:
-    #   {cache_dir}/fast-all-MiniLM-L6-v2/  (deprecated_tar_struct=True path)
-    # model_name.split('/')[-1] = "all-MiniLM-L6-v2", prefix "fast-" applied
-    ('../models/all-MiniLM-L6-v2', 'fastembed_models/fast-all-MiniLM-L6-v2'),
+    # Pre-downloaded fastembed model — fastembed >= 0.7 uses huggingface_hub snapshot_download
+    # which stores models in HF cache format: models--{org}--{repo}/blobs,refs,...
+    # Source model must be downloaded first: cd backend && python3 scripts/download-models.py
+    ('../models/models--qdrant--all-MiniLM-L6-v2-onnx', 'fastembed_models/models--qdrant--all-MiniLM-L6-v2-onnx'),
 ]
 
 a = Analysis(
