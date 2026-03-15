@@ -9,6 +9,10 @@ bash "$ROOT/backend/build.sh"
 
 echo "===== Step 2: Build Tauri + React ====="
 cd "$ROOT"
+if [ ! -d "$ROOT/node_modules" ]; then
+    echo "node_modules not found, running npm install..."
+    npm install
+fi
 npm run tauri build
 
 echo "===== Build complete ====="
