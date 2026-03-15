@@ -1,3 +1,15 @@
+exclude: |
+  (?x)^(
+    \.claude/|
+    \.opencode/|
+    plans/|
+    node_modules/|
+    models/|
+    src-tauri/target/|
+    backend/\.venv/|
+    mini-rag-sidecar/
+  )
+
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
@@ -6,6 +18,7 @@ repos:
       - id: end-of-file-fixer
       - id: check-yaml
       - id: check-json
+        exclude: tsconfig.*\.json$
       - id: check-merge-conflict
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
