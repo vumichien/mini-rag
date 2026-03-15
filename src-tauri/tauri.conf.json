@@ -27,8 +27,7 @@
   },
   "bundle": {
     "active": true,
-    "targets": ["nsis"],
-    "identifier": "com.minirag.app",
+    "targets": "all",
     "publisher": "Mini RAG",
     "copyright": "2026",
     "category": "Utility",
@@ -47,11 +46,12 @@
     "windows": {
       "nsis": {
         "displayLanguageSelector": false,
-        "shortcutName": "Mini RAG",
-        "createDesktopShortcut": true,
-        "createStartMenuShortcut": true,
-        "installerIcon": "icons/icon.ico"
+        "installMode": "currentUser"
       }
+    },
+    "macOS": {
+      "minimumSystemVersion": "10.15",
+      "exceptionDomain": "localhost"
     }
   }
 }
