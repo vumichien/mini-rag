@@ -7,11 +7,12 @@ vi.mock("../lib/api-client");
 
 const mockCheckHealth = vi.mocked(apiClient.checkHealth);
 
-// Helper: flush one interval tick (500ms) + all pending microtasks
+// Helper: advance fake time by one interval tick (500ms) and let async callbacks settle.
+// Uses advanceTimersByTimeAsync to avoid infinite-loop from vi.runAllTimersAsync()
+// re-firing a recurring setInterval.
 async function tickInterval() {
   await act(async () => {
-    vi.advanceTimersByTime(500);
-    await vi.runAllTimersAsync();
+    await vi.advanceTimersByTimeAsync(500);
   });
 }
 
@@ -57,8 +58,8 @@ describe("LoadingScreen", () => {
 
     render(<LoadingScreen onReady={() => {}} />);
 
-    // Simulate 31 seconds have passed so secs > 30 triggers on next tick
-    currentTime = startTime + 31_500;
+    // Simulate 61 seconds have passed so secs > 60 triggers on next tick
+    currentTime = startTime + 61_500;
     await tickInterval();
 
     expect(screen.getByText("Startup timeout. Please restart the app.")).toBeInTheDocument();

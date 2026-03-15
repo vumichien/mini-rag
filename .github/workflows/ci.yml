@@ -63,4 +63,6 @@ jobs:
 
       - name: Run tests
         working-directory: backend
-        run: python -m pytest tests/ -v
+        # test_build_config.py validates PyInstaller build artifacts (model files,
+        # spec content, .bat scripts) — not applicable in CI. Excluded intentionally.
+        run: python -m pytest tests/ -v --ignore=tests/test_build_config.py
