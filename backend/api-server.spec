@@ -41,6 +41,10 @@ hidden_imports = [
     # Windows event loop (optional, imported with try/except in main.py)
     'winloop',
 
+    # File upload support (required by FastAPI form endpoints)
+    'multipart',
+    'python_multipart',
+
     # App modules
     'app',
     'routes.upload',
