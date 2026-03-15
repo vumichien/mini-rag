@@ -38,3 +38,6 @@ models/
 
 # Compiled binaries (generated)
 src-tauri/binaries/*.exe
+
+# PyInstaller temp/build artifacts
+mini-rag-sidecar/
