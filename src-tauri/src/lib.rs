@@ -21,7 +21,19 @@ fn get_app_data_dir(app: &AppHandle) -> String {
         .unwrap_or_else(|_| get_data_dir_fallback(std::env::var("APPDATA").ok()))
 }
 
+/// Returns true if something is already listening on the given port.
+fn is_port_open(port: u16) -> bool {
+    std::net::TcpStream::connect(("127.0.0.1", port)).is_ok()
+}
+
 fn spawn_sidecar(app: &AppHandle) {
+    // In dev mode the backend is started by `npm run dev` (concurrently).
+    // Skip spawning the sidecar to avoid a duplicate-process conflict.
+    if is_port_open(52547) {
+        println!("[sidecar] backend already running on :52547, skipping sidecar spawn");
+        return;
+    }
+
     let data_dir = get_app_data_dir(app);
     std::fs::create_dir_all(&data_dir).ok();
 
