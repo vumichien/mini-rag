@@ -1,47 +1,31 @@
 # -*- mode: python ; coding: utf-8 -*-
 # PyInstaller spec for Mini RAG backend sidecar
 # Output: api-server.exe  →  build.bat renames to api-server-<target-triple>.exe
-from PyInstaller.utils.hooks import collect_data_files, collect_dynamic_libs
+from PyInstaller.utils.hooks import collect_data_files, collect_dynamic_libs, collect_all, collect_submodules
+
+# chromadb: skip server subpackage — needs opentelemetry.instrumentation (not installed)
+# We only use chromadb as a local persistent client, not as a server.
+chroma_hidden = collect_submodules('chromadb', filter=lambda name: not name.startswith('chromadb.server'))
+chroma_datas  = collect_data_files('chromadb')
+chroma_bins   = []
+fastembed_datas, fastembed_bins, fastembed_hidden = collect_all('fastembed')
+fitz_datas,     fitz_bins,     fitz_hidden     = collect_all('fitz')
+pil_datas,      pil_bins,      pil_hidden      = collect_all('PIL')
 
 block_cipher = None
 
 hidden_imports = [
-    # ChromaDB — dynamic imports
-    'chromadb.api.segment',
-    'chromadb.api.impl.composite.composite_api',
-    'chromadb.db.impl',
-    'chromadb.db.impl.sqlite',
-    'chromadb.segment.impl.vector',
-    'chromadb.segment.impl.vector.local_hnsw',
-    'chromadb.segment.impl.vector.local_persistent_hnsw',
-    'chromadb.segment.impl.vector.brute_force_index',
-    'chromadb.segment.impl.vector.hnsw_params',
-    'chromadb.segment.impl.vector.batch',
-    'chromadb.segment.impl.metadata',
-    'chromadb.segment.impl.metadata.sqlite',
-    'chromadb.segment.impl.manager',
-    'chromadb.segment.impl.manager.local',
-    'chromadb.execution.executor.local',
-    'chromadb.migrations',
-    'chromadb.migrations.embeddings_queue',
-    'chromadb.quota.simple_quota_enforcer',
-    'chromadb.rate_limit.simple_rate_limit',
-    'chromadb.telemetry.product.posthog',
-
-    # ONNX + tokenizers
-    'onnxruntime',
-    'tokenizers',
-    'tqdm',
-
-    # FastAPI stack
+    # FastAPI / uvicorn stack
     'fastapi',
     'uvicorn',
     'uvicorn.lifespan',
     'uvicorn.server',
     'uvicorn.protocols.http',
     'uvicorn.protocols.http.h11_impl',
-    'uvicorn.protocols.websocket',
-    'uvicorn.protocols.websocket.auto',
+    'uvicorn.protocols.websockets',
+    'uvicorn.protocols.websockets.auto',
+    'uvicorn.protocols.websockets.websockets_impl',
+    'uvicorn.protocols.websockets.wsproto_impl',
     'starlette.applications',
     'starlette.routing',
     'starlette.responses',
@@ -49,8 +33,10 @@ hidden_imports = [
     'starlette.middleware.cors',
     'h11',
 
-    # PyMuPDF
-    'fitz',
+    # ONNX + tokenizers
+    'onnxruntime',
+    'tokenizers',
+    'tqdm',
 
     # Windows event loop (optional, imported with try/except in main.py)
     'winloop',
@@ -68,28 +54,37 @@ hidden_imports = [
 ]
 
 datas = [
-    *collect_data_files('chromadb'),
+    *chroma_datas,
+    *fastembed_datas,
+    *fitz_datas,
+    *pil_datas,
     *collect_data_files('onnxruntime'),
     *collect_data_files('tokenizers'),
     *collect_data_files('fastapi'),
     *collect_data_files('starlette'),
-    # Pre-downloaded fastembed model — must exist at ../models/all-MiniLM-L6-v2/
-    ('../models/all-MiniLM-L6-v2', 'fastembed_models'),
+    # Pre-downloaded fastembed model — fastembed looks for:
+    #   {cache_dir}/fast-all-MiniLM-L6-v2/  (deprecated_tar_struct=True path)
+    # model_name.split('/')[-1] = "all-MiniLM-L6-v2", prefix "fast-" applied
+    ('../models/all-MiniLM-L6-v2', 'fastembed_models/fast-all-MiniLM-L6-v2'),
 ]
 
 a = Analysis(
     ['main.py'],
     pathex=['.'],
     binaries=[
+        *chroma_bins,
+        *fastembed_bins,
+        *fitz_bins,
+        *pil_bins,
         *collect_dynamic_libs('onnxruntime'),
     ],
     datas=datas,
-    hiddenimports=hidden_imports,
+    hiddenimports=hidden_imports + chroma_hidden + fastembed_hidden + fitz_hidden + pil_hidden,
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
     excludes=[
-        'matplotlib', 'scipy', 'pandas', 'PIL', 'cv2',
+        'matplotlib', 'scipy', 'pandas', 'cv2',
         'notebook', 'IPython', 'pytest',
     ],
     win_no_prefer_redirects=False,
@@ -113,7 +108,7 @@ exe = EXE(
     strip=False,     # Do NOT strip on Windows (breaks binary)
     upx=True,        # UPX compression — reduces size ~40%
     upx_exclude=['vcruntime140.dll', 'msvcp140.dll', 'python3*.dll'],
-    runtime_tmpdir=None,
+    runtime_tmpdir='mini-rag-sidecar',
     console=True,    # Keep console for logging (Tauri reads stdout)
     disable_windowed_traceback=False,
     target_arch=None,

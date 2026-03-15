@@ -9,8 +9,7 @@ from routes import upload, documents, search, health
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup: initialize singletons
-    EmbedderService.initialize()
+    # Startup: only initialize vector store (fast); embedder loads lazily on first use
     VectorStoreService.initialize()
     yield
     # Shutdown: nothing to explicitly clean up
