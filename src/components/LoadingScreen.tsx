@@ -13,7 +13,7 @@ export function LoadingScreen({ onReady }: Props) {
     const interval = setInterval(async () => {
       const secs = Math.floor((Date.now() - start) / 1000);
 
-      if (secs > 30) {
+      if (secs > 60) {
         setStatus("Startup timeout. Please restart the app.");
         clearInterval(interval);
         return;
