@@ -7,14 +7,14 @@
 **File**: `feature-implementation-template.md`
 **Size**: Medium to large scope changes
 
-### Bug Fix Template  
+### Bug Fix Template
 **Use when**: Fixing specific issues, errors, or broken functionality
 **File**: `bug-fix-template.md`
 **Size**: Small to medium scope changes
 
 ### Refactoring Template
 **Use when**: Improving code structure, performance, or maintainability without changing functionality
-**File**: `refactor-template.md` 
+**File**: `refactor-template.md`
 **Size**: Medium to large scope changes
 
 ## Context Management Best Practices

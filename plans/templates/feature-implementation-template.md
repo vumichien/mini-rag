@@ -1,8 +1,8 @@
 # [Feature Name] Implementation Plan
 
-**Date**: YYYY-MM-DD  
-**Type**: Feature Implementation  
-**Status**: Planning  
+**Date**: YYYY-MM-DD
+**Type**: Feature Implementation
+**Status**: Planning
 **Context Tokens**: <200 words
 
 ## Executive Summary
@@ -18,7 +18,7 @@ Brief 2-3 sentence description of the feature and its business value.
 - [ ] Requirement 1
 - [ ] Requirement 2
 
-### Non-Functional Requirements  
+### Non-Functional Requirements
 - [ ] Performance target
 - [ ] Security requirement
 - [ ] Scalability requirement

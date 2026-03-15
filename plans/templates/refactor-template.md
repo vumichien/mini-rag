@@ -1,8 +1,8 @@
 # [Component/Module] Refactoring Plan
 
-**Date**: YYYY-MM-DD  
-**Type**: Refactoring  
-**Scope**: [Module/Component/System level]  
+**Date**: YYYY-MM-DD
+**Type**: Refactoring
+**Scope**: [Module/Component/System level]
 **Context Tokens**: <200 words
 
 ## Executive Summary
@@ -75,7 +75,7 @@ High-level strategy for the refactoring in 2-3 sentences.
 
 ## TODO Checklist
 - [ ] Phase 1: Preparation complete
-- [ ] Phase 2: Core refactoring complete  
+- [ ] Phase 2: Core refactoring complete
 - [ ] Phase 3: Integration complete
 - [ ] Performance benchmarks validated
 - [ ] Documentation updated

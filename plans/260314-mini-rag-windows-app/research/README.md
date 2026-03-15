@@ -1,7 +1,7 @@
 # PyInstaller Packaging Research - Mini-RAG Windows App
 
-**Research Completed:** 2026-03-14  
-**Domain:** Python desktop application packaging (Windows)  
+**Research Completed:** 2026-03-14
+**Domain:** Python desktop application packaging (Windows)
 **Focus Stack:** ChromaDB + FastEmbed (ONNX) + PyMuPDF + FastAPI + Uvicorn
 
 ## Documents
