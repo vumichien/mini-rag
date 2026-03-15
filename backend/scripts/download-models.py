@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Download fastembed models to the project models/ directory before building."""
+
 from pathlib import Path
 from fastembed import TextEmbedding
 
