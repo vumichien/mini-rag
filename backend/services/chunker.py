@@ -11,12 +11,14 @@ def chunk_text(text: str, filename: str, page_number: int) -> list[dict]:
         end = start + CHUNK_SIZE
         chunk = text[start:end].strip()
         if chunk:
-            chunks.append({
-                "text": chunk,
-                "filename": filename,
-                "page_number": page_number,
-                "chunk_index": chunk_index,
-            })
+            chunks.append(
+                {
+                    "text": chunk,
+                    "filename": filename,
+                    "page_number": page_number,
+                    "chunk_index": chunk_index,
+                }
+            )
         start += CHUNK_SIZE - CHUNK_OVERLAP
         chunk_index += 1
     return chunks

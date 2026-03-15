@@ -41,7 +41,9 @@ class VectorStoreService:
             }
             for c in chunks
         ]
-        cls._collection.add(ids=ids, embeddings=embeddings, documents=docs, metadatas=metadatas)
+        cls._collection.add(
+            ids=ids, embeddings=embeddings, documents=docs, metadatas=metadatas
+        )
 
     @classmethod
     def search(cls, query_embedding: list[float], n_results: int = 5) -> list[dict]:
@@ -57,13 +59,15 @@ class VectorStoreService:
         )
         output = []
         for i in range(len(results["ids"][0])):
-            output.append({
-                "text": results["documents"][0][i],
-                "filename": results["metadatas"][0][i]["filename"],
-                "page_number": results["metadatas"][0][i]["page_number"],
-                "chunk_index": results["metadatas"][0][i]["chunk_index"],
-                "score": 1 - results["distances"][0][i],  # cosine similarity
-            })
+            output.append(
+                {
+                    "text": results["documents"][0][i],
+                    "filename": results["metadatas"][0][i]["filename"],
+                    "page_number": results["metadatas"][0][i]["page_number"],
+                    "chunk_index": results["metadatas"][0][i]["chunk_index"],
+                    "score": 1 - results["distances"][0][i],  # cosine similarity
+                }
+            )
         return output
 
     @classmethod
