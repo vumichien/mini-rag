@@ -1,15 +1,17 @@
 import multiprocessing
+
 multiprocessing.freeze_support()  # MUST be first — Windows + PyInstaller
 
-import sys
-import os
-import asyncio
-import argparse
-import uvicorn
+import sys  # noqa: E402
+import os  # noqa: E402
+import asyncio  # noqa: E402
+import argparse  # noqa: E402
+import uvicorn  # noqa: E402
 
 if sys.platform == "win32":
     try:
         import winloop
+
         asyncio.set_event_loop_policy(winloop.EventLoopPolicy())
     except ImportError:
         pass  # winloop optional; uvicorn uses asyncio default on Windows
@@ -43,6 +45,7 @@ if __name__ == "__main__":
         # multiprocessing supervisor spawning a frozen-exe subprocess that
         # crashes silently and leaves port 52547 unserved.
         from app import create_app  # noqa: PLC0415
+
         uvicorn.run(
             create_app(),
             host="127.0.0.1",

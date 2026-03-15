@@ -1,4 +1,5 @@
 """Tests for POST /search endpoint."""
+
 import io
 import pytest
 
@@ -8,7 +9,9 @@ def upload_searchable_doc(client, sample_pdf_bytes):
     """Ensure at least one doc is indexed before search tests run."""
     client.post(
         "/upload",
-        files={"file": ("search_doc.pdf", io.BytesIO(sample_pdf_bytes), "application/pdf")},
+        files={
+            "file": ("search_doc.pdf", io.BytesIO(sample_pdf_bytes), "application/pdf")
+        },
     )
 
 
@@ -53,9 +56,11 @@ def test_search_default_max_5_results(client):
 def test_search_on_empty_collection_returns_empty(client, tmp_path):
     """Separate app instance with empty ChromaDB must return [] not crash."""
     import os
+
     os.environ["MINI_RAG_DATA_DIR"] = str(tmp_path)
 
     from services.vector_store import VectorStoreService
+
     # Re-initialize with empty dir
     VectorStoreService._client = None
     VectorStoreService._collection = None

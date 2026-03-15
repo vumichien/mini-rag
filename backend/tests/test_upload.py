@@ -1,6 +1,6 @@
 """Tests for POST /upload endpoint."""
+
 import io
-import pytest
 
 
 def test_upload_valid_pdf(client, sample_pdf_bytes):
@@ -36,7 +36,9 @@ def test_upload_rejects_file_named_non_pdf(client, sample_pdf_bytes):
     """File with .exe extension must be rejected even if content is valid PDF."""
     response = client.post(
         "/upload",
-        files={"file": ("malware.exe", io.BytesIO(sample_pdf_bytes), "application/pdf")},
+        files={
+            "file": ("malware.exe", io.BytesIO(sample_pdf_bytes), "application/pdf")
+        },
     )
     assert response.status_code == 400
 
@@ -54,6 +56,7 @@ def test_upload_rejects_oversized_file(client):
 def test_upload_rejects_empty_pdf(client):
     """A PDF with no extractable text must return 422."""
     import fitz
+
     doc = fitz.open()
     doc.new_page()  # blank page — no text
     empty_pdf = doc.tobytes()
@@ -70,7 +73,9 @@ def test_upload_sanitizes_path_traversal_filename(client, sample_pdf_bytes):
     """Filename like ../../evil.pdf must be stored as evil.pdf only."""
     response = client.post(
         "/upload",
-        files={"file": ("../../evil.pdf", io.BytesIO(sample_pdf_bytes), "application/pdf")},
+        files={
+            "file": ("../../evil.pdf", io.BytesIO(sample_pdf_bytes), "application/pdf")
+        },
     )
     assert response.status_code == 200
     assert "/" not in response.json()["filename"]

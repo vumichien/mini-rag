@@ -5,11 +5,13 @@ End-to-end workflow tests covering the full user journey:
 These tests exercise the full HTTP API stack (no unit isolation).
 They map to Phase 07 test scenarios: Tests 3, 5, 6, 7.
 """
+
 import io
 import pytest
 
 
 # ── Upload → Search workflow (Test 3 + Test 5) ───────────────────────────────
+
 
 class TestUploadThenSearch:
     """Upload a PDF then verify search returns results from it."""
@@ -18,7 +20,13 @@ class TestUploadThenSearch:
     def uploaded_doc(self, client, sample_pdf_bytes):
         r = client.post(
             "/upload",
-            files={"file": ("ai-intro.pdf", io.BytesIO(sample_pdf_bytes), "application/pdf")},
+            files={
+                "file": (
+                    "ai-intro.pdf",
+                    io.BytesIO(sample_pdf_bytes),
+                    "application/pdf",
+                )
+            },
         )
         assert r.status_code == 200
         return r.json()
@@ -28,7 +36,9 @@ class TestUploadThenSearch:
         assert uploaded_doc["filename"] == "ai-intro.pdf"
 
     def test_search_returns_results_after_upload(self, client, uploaded_doc):
-        r = client.post("/search", json={"query": "artificial intelligence machine learning"})
+        r = client.post(
+            "/search", json={"query": "artificial intelligence machine learning"}
+        )
         assert r.status_code == 200
         assert len(r.json()["results"]) > 0
 
@@ -56,6 +66,7 @@ class TestUploadThenSearch:
 
 # ── Upload → Delete → Search isolation (Test 6) ──────────────────────────────
 
+
 class TestDeleteIsolation:
     """Delete a doc, then verify search no longer returns its content."""
 
@@ -63,7 +74,13 @@ class TestDeleteIsolation:
     def doc_to_delete(self, client, sample_pdf_bytes):
         r = client.post(
             "/upload",
-            files={"file": ("to-delete.pdf", io.BytesIO(sample_pdf_bytes), "application/pdf")},
+            files={
+                "file": (
+                    "to-delete.pdf",
+                    io.BytesIO(sample_pdf_bytes),
+                    "application/pdf",
+                )
+            },
         )
         assert r.status_code == 200
         return r.json()
@@ -90,6 +107,7 @@ class TestDeleteIsolation:
 
 # ── Multiple uploads (Test 4 variant) ────────────────────────────────────────
 
+
 class TestMultipleUploads:
     """Upload multiple docs and verify all appear in /documents."""
 
@@ -98,7 +116,13 @@ class TestMultipleUploads:
         for i in range(3):
             r = client.post(
                 "/upload",
-                files={"file": (f"multi-{i}.pdf", io.BytesIO(sample_pdf_bytes), "application/pdf")},
+                files={
+                    "file": (
+                        f"multi-{i}.pdf",
+                        io.BytesIO(sample_pdf_bytes),
+                        "application/pdf",
+                    )
+                },
             )
             assert r.status_code == 200
             uploaded_ids.append(r.json()["doc_id"])
@@ -111,12 +135,19 @@ class TestMultipleUploads:
     def test_each_doc_has_positive_chunk_count(self, client, sample_pdf_bytes):
         r = client.post(
             "/upload",
-            files={"file": ("chunk-check.pdf", io.BytesIO(sample_pdf_bytes), "application/pdf")},
+            files={
+                "file": (
+                    "chunk-check.pdf",
+                    io.BytesIO(sample_pdf_bytes),
+                    "application/pdf",
+                )
+            },
         )
         assert r.json()["chunk_count"] >= 1
 
 
 # ── Search edge cases (Test 5 + Phase 07 performance proxy) ──────────────────
+
 
 class TestSearchEdgeCases:
     def test_empty_query_rejected(self, client):
@@ -137,7 +168,13 @@ class TestSearchEdgeCases:
         r = client.post("/search", json={"query": "artificial intelligence"})
         assert r.status_code == 200
         for result in r.json()["results"]:
-            assert set(result.keys()) >= {"text", "filename", "page_number", "chunk_index", "score"}
+            assert set(result.keys()) >= {
+                "text",
+                "filename",
+                "page_number",
+                "chunk_index",
+                "score",
+            }
 
     def test_n_results_zero_returns_empty(self, client):
         r = client.post("/search", json={"query": "python", "n_results": 0})
@@ -149,6 +186,7 @@ class TestSearchEdgeCases:
 
 # ── Health (Test 2 proxy) ─────────────────────────────────────────────────────
 
+
 class TestApiReadiness:
     def test_health_returns_ok_status(self, client):
         r = client.get("/health")
@@ -157,12 +195,14 @@ class TestApiReadiness:
 
     def test_health_response_is_fast(self, client):
         import time
+
         start = time.monotonic()
         client.get("/health")
         assert time.monotonic() - start < 1.0
 
 
 # ── Full smoke test (Manual Smoke Test Script automated) ─────────────────────
+
 
 def test_full_smoke_workflow(client, sample_pdf_bytes):
     """
@@ -178,7 +218,9 @@ def test_full_smoke_workflow(client, sample_pdf_bytes):
     # Step 1-2: Upload
     r = client.post(
         "/upload",
-        files={"file": ("smoke-test.pdf", io.BytesIO(sample_pdf_bytes), "application/pdf")},
+        files={
+            "file": ("smoke-test.pdf", io.BytesIO(sample_pdf_bytes), "application/pdf")
+        },
     )
     assert r.status_code == 200
     doc = r.json()

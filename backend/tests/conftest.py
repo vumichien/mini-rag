@@ -3,10 +3,10 @@ Shared fixtures for backend tests.
 Uses a temp directory for ChromaDB so tests are fully isolated.
 fastembed model must be pre-downloaded in <repo_root>/models/ for dev mode.
 """
+
 import os
 import sys
 import pytest
-import tempfile
 
 # Ensure backend/ is on the path regardless of where pytest is invoked
 BACKEND_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -26,6 +26,7 @@ def temp_data_dir(tmp_path_factory):
 def app(temp_data_dir):
     """Create FastAPI app once per session (embedder + ChromaDB init is expensive)."""
     from app import create_app
+
     return create_app()
 
 
@@ -33,6 +34,7 @@ def app(temp_data_dir):
 def client(app):
     """httpx TestClient wrapping the FastAPI app."""
     from fastapi.testclient import TestClient
+
     with TestClient(app) as c:
         yield c
 
@@ -41,6 +43,7 @@ def client(app):
 def sample_pdf_bytes() -> bytes:
     """Create a minimal real PDF in memory using PyMuPDF."""
     import fitz
+
     doc = fitz.open()
     page = doc.new_page()
     # Write enough text to produce multiple chunks

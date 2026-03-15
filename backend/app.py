@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
-from services.embedder import EmbedderService
 from services.vector_store import VectorStoreService
 from routes import upload, documents, search, health
 

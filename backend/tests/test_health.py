@@ -10,6 +10,7 @@ def test_health_returns_ok(client):
 def test_health_is_fast(client):
     """Health endpoint must respond quickly — used for startup polling."""
     import time
+
     start = time.monotonic()
     client.get("/health")
     elapsed = time.monotonic() - start

@@ -1,4 +1,5 @@
 """Tests for GET /documents and DELETE /documents/{doc_id}."""
+
 import io
 import pytest
 
@@ -8,7 +9,13 @@ def uploaded_doc_id(client, sample_pdf_bytes):
     """Upload one PDF and return its doc_id for document tests."""
     response = client.post(
         "/upload",
-        files={"file": ("doc_for_list.pdf", io.BytesIO(sample_pdf_bytes), "application/pdf")},
+        files={
+            "file": (
+                "doc_for_list.pdf",
+                io.BytesIO(sample_pdf_bytes),
+                "application/pdf",
+            )
+        },
     )
     assert response.status_code == 200
     return response.json()["doc_id"]
@@ -43,7 +50,9 @@ def test_delete_document_returns_200(client, sample_pdf_bytes):
     # Upload fresh doc to delete
     r = client.post(
         "/upload",
-        files={"file": ("to_delete.pdf", io.BytesIO(sample_pdf_bytes), "application/pdf")},
+        files={
+            "file": ("to_delete.pdf", io.BytesIO(sample_pdf_bytes), "application/pdf")
+        },
     )
     doc_id = r.json()["doc_id"]
 
@@ -56,7 +65,9 @@ def test_delete_document_returns_200(client, sample_pdf_bytes):
 def test_delete_removes_from_list(client, sample_pdf_bytes):
     r = client.post(
         "/upload",
-        files={"file": ("to_delete2.pdf", io.BytesIO(sample_pdf_bytes), "application/pdf")},
+        files={
+            "file": ("to_delete2.pdf", io.BytesIO(sample_pdf_bytes), "application/pdf")
+        },
     )
     doc_id = r.json()["doc_id"]
 
