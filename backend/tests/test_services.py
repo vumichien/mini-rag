@@ -1,7 +1,8 @@
 """Unit tests for services — pdf_parser, chunker, embedder (no HTTP layer)."""
 
-import sys
 import os
+import sys
+
 import pytest
 
 # Ensure backend/ is on path
@@ -63,14 +64,14 @@ class TestChunker:
         assert chunks[0]["chunk_index"] == 0
 
     def test_long_text_multiple_chunks(self):
-        from services.chunker import chunk_text, CHUNK_SIZE
+        from services.chunker import CHUNK_SIZE, chunk_text
 
         text = "A" * (CHUNK_SIZE * 3)
         chunks = chunk_text(text, "big.pdf", 2)
         assert len(chunks) > 1
 
     def test_chunk_indices_are_sequential(self):
-        from services.chunker import chunk_text, CHUNK_SIZE
+        from services.chunker import CHUNK_SIZE, chunk_text
 
         text = "B" * (CHUNK_SIZE * 2)
         chunks = chunk_text(text, "f.pdf", 1)
@@ -78,7 +79,7 @@ class TestChunker:
             assert c["chunk_index"] == i
 
     def test_overlap_means_chunks_share_content(self):
-        from services.chunker import chunk_text, CHUNK_SIZE, CHUNK_OVERLAP
+        from services.chunker import CHUNK_OVERLAP, CHUNK_SIZE, chunk_text
 
         text = "X" * (CHUNK_SIZE + CHUNK_OVERLAP)
         chunks = chunk_text(text, "f.pdf", 1)
@@ -133,8 +134,9 @@ class TestEmbedder:
 
     def test_similar_texts_have_higher_score_than_dissimilar(self):
         """Semantic coherence check — similar texts score higher."""
-        from services.embedder import EmbedderService
         import math
+
+        from services.embedder import EmbedderService
 
         def cosine(a, b):
             dot = sum(x * y for x, y in zip(a, b))

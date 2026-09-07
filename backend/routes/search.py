@@ -1,6 +1,5 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
-
 from services.embedder import EmbedderService
 from services.vector_store import VectorStoreService
 
