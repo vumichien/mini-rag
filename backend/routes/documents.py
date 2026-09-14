@@ -1,5 +1,4 @@
 from fastapi import APIRouter, HTTPException
-
 from services.vector_store import VectorStoreService
 
 router = APIRouter()
