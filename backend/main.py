@@ -2,11 +2,12 @@ import multiprocessing
 
 multiprocessing.freeze_support()  # MUST be first — Windows + PyInstaller
 
-import sys  # noqa: E402
-import os  # noqa: E402
-import asyncio  # noqa: E402
-import argparse  # noqa: E402
-import uvicorn  # noqa: E402
+import argparse
+import asyncio
+import os
+import sys
+
+import uvicorn
 
 if sys.platform == "win32":
     try:
@@ -44,7 +45,7 @@ if __name__ == "__main__":
         # PyInstaller bundle: pass app instance directly — avoids uvicorn's
         # multiprocessing supervisor spawning a frozen-exe subprocess that
         # crashes silently and leaves port 52547 unserved.
-        from app import create_app  # noqa: PLC0415
+        from app import create_app
 
         uvicorn.run(
             create_app(),
