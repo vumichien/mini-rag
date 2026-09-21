@@ -6,6 +6,7 @@ fastembed model must be pre-downloaded in <repo_root>/models/ for dev mode.
 
 import os
 import sys
+
 import pytest
 
 # Ensure backend/ is on the path regardless of where pytest is invoked
