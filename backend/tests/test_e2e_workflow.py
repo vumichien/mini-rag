@@ -7,8 +7,8 @@ They map to Phase 07 test scenarios: Tests 3, 5, 6, 7.
 """
 
 import io
-import pytest
 
+import pytest
 
 # ── Upload → Search workflow (Test 3 + Test 5) ───────────────────────────────
 

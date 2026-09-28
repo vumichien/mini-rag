@@ -1,6 +1,7 @@
 """Tests for GET /documents and DELETE /documents/{doc_id}."""
 
 import io
+
 import pytest
 
 
