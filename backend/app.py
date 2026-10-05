@@ -1,9 +1,9 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from routes import documents, health, search, upload
 from services.vector_store import VectorStoreService
-from routes import upload, documents, search, health
 
 
 @asynccontextmanager
