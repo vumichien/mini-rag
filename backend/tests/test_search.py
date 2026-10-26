@@ -1,6 +1,7 @@
 """Tests for POST /search endpoint."""
 
 import io
+
 import pytest
 
 
