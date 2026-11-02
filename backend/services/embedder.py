@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+
 from fastembed import TextEmbedding
 
 MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
