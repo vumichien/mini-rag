@@ -1,10 +1,10 @@
 import os
 import uuid
-from fastapi import APIRouter, UploadFile, File, HTTPException
 
-from services.pdf_parser import extract_pages
+from fastapi import APIRouter, File, HTTPException, UploadFile
 from services.chunker import chunk_text
 from services.embedder import EmbedderService
+from services.pdf_parser import extract_pages
 from services.vector_store import VectorStoreService
 
 router = APIRouter()
